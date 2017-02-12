@@ -24,6 +24,7 @@ import (
 	"errors"
 
 	"github.com/Sirupsen/logrus"
+	prefixed "github.com/x-cray/logrus-prefixed-formatter"
 )
 
 const (
@@ -35,6 +36,10 @@ var (
 	// Log is the public logrus value used internally.
 	Log *logrus.Logger
 
+	// Debug mode does not recover from panics
+	// this allows the developer to see the stacktrace when a panic occurs
+	Debug bool
+
 	endian binary.ByteOrder = binary.BigEndian
 
 	errInvalidByteLen = errors.New("invalid byte length")
@@ -43,6 +48,7 @@ var (
 func init() {
 	// Create a new logger instance.
 	Log = logrus.New()
+	Log.Formatter = new(prefixed.TextFormatter)
 }
 
 func bytesToUint16(data []byte) (v uint16, err error) {

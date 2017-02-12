@@ -463,12 +463,15 @@ func (s *Socket) read(buf []byte) (int, error) {
 }
 
 func (s *Socket) readLoop() {
-	// Catch panics.
-	defer func() {
-		if e := recover(); e != nil {
-			Log.Warningf("socket: read loop: catched panic: %v", e)
-		}
-	}()
+
+	if !Debug {
+		// Catch panics.
+		defer func() {
+			if e := recover(); e != nil {
+				Log.Warningf("socket: read loop: catched panic: %v", e)
+			}
+		}()
+	}
 
 	// Close the socket on exit.
 	defer s.Close()
@@ -584,12 +587,15 @@ func (s *Socket) readLoop() {
 }
 
 func (s *Socket) handleReceivedMessage(reqType byte, headerBuf, payloadBuf []byte) (err error) {
-	// Catch panics.
-	defer func() {
-		if e := recover(); e != nil {
-			err = fmt.Errorf("catched panic: %v", e)
-		}
-	}()
+
+	if !Debug {
+		// Catch panics.
+		defer func() {
+			if e := recover(); e != nil {
+				err = fmt.Errorf("catched panic: %v", e)
+			}
+		}()
+	}
 
 	// Reset the timeout, because data was successful read from the socket.
 	s.resetTimeout()

@@ -211,12 +211,15 @@ func (s *Server) handleConnectionLoop() {
 }
 
 func (s *Server) handleConnection(conn net.Conn) {
-	// Catch panics.
-	defer func() {
-		if e := recover(); e != nil {
-			Log.Errorf("server catched panic: %v", e)
-		}
-	}()
+
+	if !Debug {
+		// Catch panics.
+		defer func() {
+			if e := recover(); e != nil {
+				Log.Errorf("server catched panic: %v", e)
+			}
+		}()
+	}
 
 	// Create a new socket.
 	socket := NewSocket(conn)
